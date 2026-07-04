@@ -22,15 +22,31 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "-q",
+          "http://localhost:8080/api/healthcheck",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
 
   frontend:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: https://pendekin.com
-
+        VITE_API_URL: https://pdkin.my.id
+    depends_on:
+      backend:
+        condition: service_healthy
     ports:
       - "80:80"
+      - "443:443"
 
   db:
     image: postgres:16-alpine
