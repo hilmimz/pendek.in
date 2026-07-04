@@ -17,8 +17,6 @@ services:
 
   backend:
     build: ./backend
-    ports:
-      - "8080:8080"
     env_file:
       - ./backend/.env
     depends_on:
@@ -26,7 +24,11 @@ services:
         condition: service_completed_successfully
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: https://pendekin.com
+
     ports:
       - "80:80"
 

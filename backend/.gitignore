@@ -1,6 +1,5 @@
 /bin
 /vendor
-go.sum
 .env
 .air.toml
 /tmp
