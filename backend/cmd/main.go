@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"pendekin_go/config"
 	"pendekin_go/internal/database"
 	"pendekin_go/internal/handler"
@@ -62,6 +63,9 @@ func main() {
 	// Public
 	api.GET("/healthcheck", healthHandler.HealthCheck)
 	router.GET("/:alias", shortUrlHandler.Redirect)
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, cfg.App.FrontendURL)
+	})
 
 	// Auth
 	api.POST("/auth/register", userHandler.Register)
