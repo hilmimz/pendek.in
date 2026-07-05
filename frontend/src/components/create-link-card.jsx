@@ -97,7 +97,7 @@ export function CreateLinkCard() {
   };
 
   return (
-    <Card>
+    <Card className="mb-10 md:mb-0">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Link2 className="size-5 text-primary" />
