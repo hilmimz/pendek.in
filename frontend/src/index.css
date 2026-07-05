@@ -87,3 +87,14 @@ html {
     --sidebar-border: oklch(0.269 0 0);
     --sidebar-ring: oklch(0.439 0 0);
 }
+
+#nprogress .bar {
+    background: #e55050 !important;
+    height: 2px !important;
+}
+
+#nprogress .peg {
+    box-shadow:
+        0 0 10px #e55050,
+        0 0 5px #e55050 !important;
+}
