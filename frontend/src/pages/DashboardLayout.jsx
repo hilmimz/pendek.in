@@ -30,16 +30,16 @@ export default function DashboardLayout() {
   return (
     <div>
       <nav className="border border-black/10">
-        <div className="flex items-center justify-between font-sans px-6 max-w-6xl mx-auto py-2">
+        <div className="flex items-center justify-between font-sans px-2 md:px-6 max-w-6xl mx-auto py-2">
           <div className="flex items-center gap-10">
-            <div className="flex flex-col h-14 max-w-6xl">
+            <div className="flex flex-col max-h-30 max-w-6xl">
               <button
                 className="text-secondary font-bold text-xl flex items-center cursor-pointer tracking-tight"
                 onClick={() => navigate("/")}
               >
                 PENDEKIN
               </button>
-              <p className="font-sans text-xs text-muted-foreground">
+              <p className="font-sans text-xs text-muted-foreground hidden md:block">
                 URL Management Dashboard
               </p>
             </div>
@@ -53,7 +53,7 @@ export default function DashboardLayout() {
                 }`}
               >
                 <LayoutDashboard className="size-4" />
-                Dashboard
+                <p className="hidden md:block">Dashboard</p>
               </button>
               <button
                 onClick={() => navigate("/analytics")}
@@ -64,7 +64,7 @@ export default function DashboardLayout() {
                 }`}
               >
                 <BarChart3 className="size-4" />
-                Analytics
+                <p className="hidden md:block">Analytics</p>
               </button>
             </ul>
           </div>
