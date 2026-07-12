@@ -208,3 +208,27 @@ func (s *ShortUrlUsecase) DeleteShortUrl(req *domain.DeleteShortUrlRequest) (*do
 
 	return res, nil
 }
+
+func (s *ShortUrlUsecase) GetUserShortUrl(userID int) (*domain.GetUrlByUserIdResponse, *errs.Error) {
+	shortUrls, totalUrls, totalClicks, err := s.shortUrlRepo.FindByUserId(userID)
+	if err != nil && !errors.Is(err, domain.ErrAliasNotFound) {
+		logger.Log.Error("failed to get user short urls",
+			zap.Int("user_id", userID),
+			zap.Error(err),
+		)
+		err := errs.Internal("failed to get user short urls", err)
+		return nil, err
+	}
+
+	if shortUrls == nil {
+		shortUrls = []domain.ShortUrl{}
+	}
+
+	res := &domain.GetUrlByUserIdResponse{
+		ShortUrls:   shortUrls,
+		TotalUrls:   totalUrls,
+		TotalClicks: totalClicks,
+	}
+
+	return res, nil
+}

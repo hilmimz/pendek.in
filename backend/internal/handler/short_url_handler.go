@@ -113,5 +113,24 @@ func (s *ShortUrlHandler) Delete(c *gin.Context) {
 		return
 	}
 	logger.Log.Info("short url deleted successfully", zap.Int("short_url_id", id), zap.Int("user_id", userIdInt))
-	response.ResponseOK(c, 200, "Short url deleted successfully", resp)
+	response.ResponseOK(c, http.StatusOK, "Short url deleted successfully", resp)
+}
+
+func (s *ShortUrlHandler) GetUserShortUrl(c *gin.Context) {
+	userId, ok := c.Get("user_id")
+	if !ok {
+		logger.Log.Error("unauthorized: user_id not found in context")
+		response.ResponseNOK(c, http.StatusUnauthorized, "unauthorized", nil)
+		return
+	}
+
+	userIdInt := userId.(int)
+	shortUrls, errs := s.shortUrlUseCase.GetUserShortUrl(userIdInt)
+	if errs != nil {
+		logger.Log.Error("failed to get user short urls", zap.Error(errs), zap.Int("user_id", userIdInt))
+		response.ResponseNOK(c, errs.Code, errs.Message, nil)
+		return
+	}
+	logger.Log.Info("user short urls retrieved successfully", zap.Int("user_id", userIdInt))
+	response.ResponseOK(c, http.StatusOK, "User short urls retrieved successfully", shortUrls)
 }

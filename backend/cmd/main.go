@@ -76,6 +76,7 @@ func main() {
 	{
 		api.POST("/short-urls/create", shortUrlHandler.Create)
 		api.DELETE("/short-urls/:id", shortUrlHandler.Delete)
+		api.GET("/short-urls", shortUrlHandler.GetUserShortUrl)
 
 		api.GET("/auth/me", userHandler.FetchMe)
 		api.POST("/auth/logout", userHandler.Logout)

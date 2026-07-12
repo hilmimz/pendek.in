@@ -57,17 +57,25 @@ type DeleteShortUrlResponse struct {
 	Alias      *string `json:"alias"`
 }
 
+type GetUrlByUserIdResponse struct {
+	ShortUrls   []ShortUrl `json:"short_urls"`
+	TotalUrls   int        `json:"total_urls"`
+	TotalClicks int        `json:"total_clicks"`
+}
+
 type ShortUrlRepository interface {
 	FindByAlias(alias *string) (*ShortUrl, error)
 	FindById(id int) (*ShortUrl, error)
 	Create(shortUrl *ShortUrl) error
 	Delete(shortUrl *ShortUrl) error
 	UpdateClickCount(shortUrl *ShortUrl) error
+	FindByUserId(userID int) ([]ShortUrl, int, int, error)
 }
 
 type ShortUrlUsecase interface {
 	CreateShortUrl(req *CreateShortUrlRequest) (*CreateShortUrlResponse, *errs.Error)
 	RedirectShortUrl(req *RedirectShortUrlRequest) (*RedirectShortUrlResponse, *errs.Error)
 	DeleteShortUrl(req *DeleteShortUrlRequest) (*DeleteShortUrlResponse, *errs.Error)
+	GetUserShortUrl(userID int) (*GetUrlByUserIdResponse, *errs.Error)
 	// GetShortUrlStats(shortUrlID int) (*ShortUrl, *errors.Error)
 }

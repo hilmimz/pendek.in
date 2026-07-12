@@ -45,6 +45,24 @@ func (s *ShortUrlRepository) FindById(id int) (*domain.ShortUrl, error) {
 	return &shortUrl, nil
 }
 
+func (s *ShortUrlRepository) FindByUserId(userID int) (shortUrls []domain.ShortUrl, totalUrls int, totalClicks int, err error) {
+	err = s.db.Where("user_id = ?", userID).Find(&shortUrls).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return shortUrls, 0, 0, domain.ErrAliasNotFound
+	}
+	if err != nil {
+		return nil, 0, 0, err
+	}
+
+	totalUrls = len(shortUrls)
+	for _, link := range shortUrls {
+		totalClicks += link.ClickCount
+	}
+
+	return shortUrls, totalUrls, totalClicks, nil
+}
+
 func (s *ShortUrlRepository) Create(shortLink *domain.ShortUrl) error {
 	if err := s.db.Create(shortLink).Error; err != nil {
 		return err
