@@ -232,3 +232,30 @@ func (s *ShortUrlUsecase) GetUserShortUrl(userID int) (*domain.GetUrlByUserIdRes
 
 	return res, nil
 }
+
+func (s *ShortUrlUsecase) GetUrlStats(userID int) (*domain.ShortUrlStats, *errs.Error) {
+	totalUrlStats, err := s.shortUrlRepo.GetTotalUrlStats(userID)
+	if err != nil && !errors.Is(err, domain.ErrAliasNotFound) {
+		logger.Log.Error("failed to get url stats",
+			zap.Int("user_id", userID),
+			zap.Error(err),
+		)
+		err := errs.Internal("failed to get url stats", err)
+		return nil, err
+	}
+	totalClickStats, err := s.shortUrlRepo.GetTotalClickStats(userID)
+	if err != nil && !errors.Is(err, domain.ErrAliasNotFound) {
+		logger.Log.Error("failed to get total click stats",
+			zap.Int("user_id", userID),
+			zap.Error(err),
+		)
+		err := errs.Internal("failed to get total click stats", err)
+		return nil, err
+	}
+
+	resp := domain.ShortUrlStats{
+		TotalUrlStats:   *totalUrlStats,
+		TotalClickStats: *totalClickStats,
+	}
+	return &resp, nil
+}

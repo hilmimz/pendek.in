@@ -20,6 +20,25 @@ type ShortUrl struct {
 	Alias       *string   `json:"alias"`
 }
 
+type ShortUrlStats struct {
+	TotalUrlStats   TotalUrlStats   `json:"url_stats"`
+	TotalClickStats TotalClickStats `json:"click_stats"`
+}
+
+type TotalUrlStats struct {
+	TotalUrl     int `json:"total_url" gorm:"column:total_url"`
+	UrlLastMonth int `json:"url_last_month" gorm:"column:url_last_month"`
+	UrlThisMonth int `json:"url_this_month" gorm:"column:url_this_month"`
+}
+
+type TotalClickStats struct {
+	TotalClick     int `json:"total_click" gorm:"column:total_click"`
+	ClickToday     int `json:"click_today" gorm:"column:click_today"`
+	ClickYesterday int `json:"click_yesterday" gorm:"column:click_yesterday"`
+	ClickThisMonth int `json:"click_this_month" gorm:"column:click_this_month"`
+	ClickLastMonth int `json:"click_last_month" gorm:"column:click_last_month"`
+}
+
 type CreateShortUrlRequest struct {
 	OriginalURL string  `json:"original_url" binding:"required,url"`
 	UserID      *int    `json:"user_id"`
@@ -70,6 +89,8 @@ type ShortUrlRepository interface {
 	Delete(shortUrl *ShortUrl) error
 	UpdateClickCount(shortUrl *ShortUrl) error
 	FindByUserId(userID int) ([]ShortUrl, int, int, error)
+	GetTotalUrlStats(userID int) (*TotalUrlStats, error)
+	GetTotalClickStats(userID int) (*TotalClickStats, error)
 }
 
 type ShortUrlUsecase interface {
@@ -77,5 +98,6 @@ type ShortUrlUsecase interface {
 	RedirectShortUrl(req *RedirectShortUrlRequest) (*RedirectShortUrlResponse, *errs.Error)
 	DeleteShortUrl(req *DeleteShortUrlRequest) (*DeleteShortUrlResponse, *errs.Error)
 	GetUserShortUrl(userID int) (*GetUrlByUserIdResponse, *errs.Error)
+	GetUrlStats(userID int) (*ShortUrlStats, *errs.Error)
 	// GetShortUrlStats(shortUrlID int) (*ShortUrl, *errors.Error)
 }

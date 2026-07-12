@@ -134,3 +134,22 @@ func (s *ShortUrlHandler) GetUserShortUrl(c *gin.Context) {
 	logger.Log.Info("user short urls retrieved successfully", zap.Int("user_id", userIdInt))
 	response.ResponseOK(c, http.StatusOK, "User short urls retrieved successfully", shortUrls)
 }
+
+func (s *ShortUrlHandler) GetUrlStats(c *gin.Context) {
+	userId, ok := c.Get("user_id")
+	if !ok {
+		logger.Log.Error("unauthorized: user_id not found in context")
+		response.ResponseNOK(c, http.StatusUnauthorized, "unauthorized", nil)
+		return
+	}
+
+	userIdInt := userId.(int)
+	totalUrlStats, errs := s.shortUrlUseCase.GetUrlStats(userIdInt)
+	if errs != nil {
+		logger.Log.Error("failed to get url stats", zap.Error(errs), zap.Int("user_id", userIdInt))
+		response.ResponseNOK(c, errs.Code, errs.Message, nil)
+		return
+	}
+	logger.Log.Info("url stats retrieved successfully", zap.Int("user_id", userIdInt))
+	response.ResponseOK(c, http.StatusOK, "Url stats retrieved successfully", totalUrlStats)
+}
