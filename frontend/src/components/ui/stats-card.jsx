@@ -16,9 +16,14 @@ export function StatsCard({
             <p className="text-sm text-muted-foreground">{title}</p>
             <h3 className="text-3xl font-semibold mt-2">{value}</h3>
             <p
-              className={`text-sm mt-2 ${trend === "up" ? "text-green-600" : "text-red-600"}`}
+              className={`text-sm mt-2 ${trend === "up"
+                  ? "text-green-600"
+                  : trend === "down"
+                    ? "text-red-600"
+                    : "text-muted-foreground"
+                }`}
             >
-              {trend === "up" ? "↑" : "↓"} {change}
+              {trend === "up" ? "↑" : trend === "down" ? "↓" : "--"} {change}
             </p>
           </div>
           <div

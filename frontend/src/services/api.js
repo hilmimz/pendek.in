@@ -69,3 +69,7 @@ export async function fetchMe() {
 export async function shorten(payload) {
   return request("/api/short-urls/create", { method: "POST", payload });
 }
+
+export async function getStats() {
+  return request("/api/short-urls/stats", { method: "GET"});
+}
