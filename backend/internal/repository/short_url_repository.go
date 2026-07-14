@@ -45,22 +45,40 @@ func (s *ShortUrlRepository) FindById(id int) (*domain.ShortUrl, error) {
 	return &shortUrl, nil
 }
 
-func (s *ShortUrlRepository) FindByUserId(userID int) (shortUrls []domain.ShortUrl, totalUrls int, totalClicks int, err error) {
-	err = s.db.Where("user_id = ?", userID).Find(&shortUrls).Error
+func (s *ShortUrlRepository) FindByUserId(userID int, limit int, offset int) (shortUrls []domain.ShortUrl, err error) {
+	query := s.db.Where("user_id = ?", userID).Order("created_at DESC")
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+	if offset > 0 {
+		query = query.Offset(offset)
+	}
+
+	err = query.Find(&shortUrls).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return shortUrls, 0, 0, domain.ErrAliasNotFound
+		return shortUrls, domain.ErrAliasNotFound
 	}
 	if err != nil {
-		return nil, 0, 0, err
+		return nil, err
 	}
 
-	totalUrls = len(shortUrls)
-	for _, link := range shortUrls {
-		totalClicks += link.ClickCount
-	}
+	return shortUrls, nil
+}
 
-	return shortUrls, totalUrls, totalClicks, nil
+func (r *ShortUrlRepository) CountByUserID(userID int) (int64, int, error) {
+	var totalUrl int64
+	var clickCount int
+	err := r.db.Model(&domain.ShortUrl{}).Where("user_id = ?", userID).Count(&totalUrl).Error
+	if err != nil {
+		return 0, 0, err
+	}
+	err = r.db.Model(&domain.ShortUrl{}).Select("SUM(click_count)").Where("user_id = ?", userID).Scan(&clickCount).Error
+	if err != nil {
+		return 0, 0, err
+	}
+	return totalUrl, clickCount, nil
 }
 
 func (s *ShortUrlRepository) GetTotalUrlStats(userID int) (*domain.TotalUrlStats, error) {

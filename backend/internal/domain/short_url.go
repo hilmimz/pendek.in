@@ -78,7 +78,7 @@ type DeleteShortUrlResponse struct {
 
 type GetUrlByUserIdResponse struct {
 	ShortUrls   []ShortUrl `json:"short_urls"`
-	TotalUrls   int        `json:"total_urls"`
+	TotalUrls   int64      `json:"total_urls"`
 	TotalClicks int        `json:"total_clicks"`
 }
 
@@ -88,16 +88,17 @@ type ShortUrlRepository interface {
 	Create(shortUrl *ShortUrl) error
 	Delete(shortUrl *ShortUrl) error
 	UpdateClickCount(shortUrl *ShortUrl) error
-	FindByUserId(userID int) ([]ShortUrl, int, int, error)
 	GetTotalUrlStats(userID int) (*TotalUrlStats, error)
 	GetTotalClickStats(userID int) (*TotalClickStats, error)
+	FindByUserId(userID int, limit int, offset int) (shortUrls []ShortUrl, err error)
+	CountByUserID(userID int) (int64, int, error)
 }
 
 type ShortUrlUsecase interface {
 	CreateShortUrl(req *CreateShortUrlRequest) (*CreateShortUrlResponse, *errs.Error)
 	RedirectShortUrl(req *RedirectShortUrlRequest) (*RedirectShortUrlResponse, *errs.Error)
 	DeleteShortUrl(req *DeleteShortUrlRequest) (*DeleteShortUrlResponse, *errs.Error)
-	GetUserShortUrl(userID int) (*GetUrlByUserIdResponse, *errs.Error)
+	GetUserShortUrl(userID int, limit int, offset int) (*GetUrlByUserIdResponse, *errs.Error)
 	GetUrlStats(userID int) (*ShortUrlStats, *errs.Error)
 	// GetShortUrlStats(shortUrlID int) (*ShortUrl, *errors.Error)
 }

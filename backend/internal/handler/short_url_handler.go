@@ -80,7 +80,7 @@ func (s *ShortUrlHandler) Redirect(c *gin.Context) {
 		return
 	}
 	logger.Log.Info("short url redirected successfully", zap.String("alias", alias), zap.String("original_url", resp.OriginalURL))
-	c.Redirect(http.StatusMovedPermanently, resp.OriginalURL)
+	c.Redirect(http.StatusFound, resp.OriginalURL)
 }
 
 func (s *ShortUrlHandler) Delete(c *gin.Context) {
@@ -125,7 +125,12 @@ func (s *ShortUrlHandler) GetUserShortUrl(c *gin.Context) {
 	}
 
 	userIdInt := userId.(int)
-	shortUrls, errs := s.shortUrlUseCase.GetUserShortUrl(userIdInt)
+	limit := c.DefaultQuery("limit", "5")
+	page := c.DefaultQuery("page", "1")
+	limitInt, _ := strconv.Atoi(limit)
+	pageInt, _ := strconv.Atoi(page)
+
+	shortUrls, errs := s.shortUrlUseCase.GetUserShortUrl(userIdInt, limitInt, pageInt)
 	if errs != nil {
 		logger.Log.Error("failed to get user short urls", zap.Error(errs), zap.Int("user_id", userIdInt))
 		response.ResponseNOK(c, errs.Code, errs.Message, nil)
