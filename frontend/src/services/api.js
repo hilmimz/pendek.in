@@ -70,6 +70,10 @@ export async function shorten(payload) {
   return request("/api/short-urls/create", { method: "POST", payload });
 }
 
+export async function getUrl() {
+  return request("/api/short-urls", { method: "GET"});
+}
+
 export async function getStats() {
   return request("/api/short-urls/stats", { method: "GET"});
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CreateLinkCard } from "../components/create-link-card";
 import { StatsCard } from "../components/ui/stats-card";
+import { RecentLinks } from "../components/ui/recent-urls";
 import { Link2, MousePointerClick, TrendingUp, Users } from "lucide-react";
 import { useEffect } from "react";
 import { getStats } from "../services/api";
@@ -63,7 +64,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="font-sans">
+    <div className="font-sans flex flex-col gap-10">
       {loading ? (
         <div className="flex items-center justify-center h-48">
           <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -73,7 +74,7 @@ export default function Dashboard() {
           <p className="text-sm text-muted-foreground">Failed to fetch data</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatsCard
             title="Total Urls"
             value={totalUrl}
@@ -109,6 +110,7 @@ export default function Dashboard() {
         </div>
       )}
       <CreateLinkCard />
+      <RecentLinks />
     </div>
   );
 }
