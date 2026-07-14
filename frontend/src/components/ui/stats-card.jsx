@@ -27,7 +27,7 @@ export function StatsCard({
             </p>
           </div>
           <div
-            className={`size-14 rounded-lg ${iconColor} flex items-center justify-center`}
+            className={`size-14 rounded-lg ${iconColor} flex items-center justify-center shrink-0`}
           >
             <Icon className="size-7 text-white" />
           </div>
