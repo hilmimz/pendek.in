@@ -54,6 +54,8 @@ func main() {
 	shortUrlHandler := handler.NewShortUrlHandler(shortUrlUseCase)
 	userHandler := handler.NewUserHandler(userUseCase, &cfg.App)
 
+	checkinHandler := handler.NewCheckinHandler()
+
 	// Setup Router
 	router := gin.Default()
 	router.Use(corsMiddleware.CORS())
@@ -62,6 +64,7 @@ func main() {
 
 	// Public
 	api.GET("/healthcheck", healthHandler.HealthCheck)
+	api.GET("/checkinlog", checkinHandler.Get)
 	router.GET("/:alias", shortUrlHandler.Redirect)
 	router.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, cfg.App.FrontendURL)
