@@ -16,13 +16,12 @@ func NewCheckinHandler() *CheckinHandler {
 
 // Get serves the contents of ~/checkin.log as plain text.
 func (h *CheckinHandler) Get(c *gin.Context) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to resolve home directory"})
-		return
+	logDir := os.Getenv("CHECKIN_LOG_DIR")
+	if logDir == "" {
+		logDir = "/data" // fallback default
 	}
 
-	path := filepath.Join(home, "checkin.log")
+	path := filepath.Join(logDir, "checkin.log")
 	data, err := os.ReadFile(path)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to read checkin.log"})
