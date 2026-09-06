@@ -17,8 +17,12 @@ services:
 
   backend:
     build: ./backend
+    volumes:
+      - /home/ubuntu/checkin.log:/data/checkin.log
     env_file:
       - ./backend/.env
+    environment:
+      - CHECKIN_LOG_DIR=/data
     depends_on:
       migrate:
         condition: service_completed_successfully
