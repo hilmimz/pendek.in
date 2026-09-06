@@ -4,6 +4,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import DashboardLayout from "./pages/DashboardLayout";
 import Analytics from "./pages/Analytics";
+import CheckinLog from "./pages/CheckinLog";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { GuestRoute } from "./components/GuestRoute";
@@ -16,6 +17,7 @@ export default function App() {
           <Route element={<GuestRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
+              <Route path="/checkinlog" element={<CheckinLog />} />
           </Route>
           <Route element={<ProtectedRoute />}>
             <Route element={<DashboardLayout />}>

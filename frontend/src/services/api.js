@@ -77,3 +77,19 @@ export async function getUrl() {
 export async function getStats() {
   return request("/api/short-urls/stats", { method: "GET"});
 }
+
+export async function fetchCheckinLog() {
+  const res = await fetch(`${BASE_API_URL}/api/checkinlog`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const text = await res.text();
+  if (!res.ok) {
+    const err = new Error(text || `HTTP ${res.status}`);
+    err.code = res.status;
+    throw err;
+  }
+
+  return text;
+}
